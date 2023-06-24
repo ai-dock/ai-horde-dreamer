@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  horde-dreamer:
+    image: dynamedia/ai-horde-dreamer
+    # prefix any bridgeData.yaml key with BRIDGE_...
+    environment:
+        # Limit GPU count. Default uses all NVIDIA cards found
+        #GPU_COUNT: 1
+        HORDE_WORKER_BRANCH: "main"
+        WEB_USER: "admin"
+        WEB_PASSWORD: "password"
+        BRIDGE_API_KEY: "0000000000"
+        BRIDGE_WORKER_NAME: "Docker Dreamer"
+        BRIDGE_MAX_THREADS: 1
+        BRIDGE_MAX_POWER: 8
+        BRIDGE_MODELS_TO_LOAD: "Top 2, stable_diffusion_inpainting"
+    ports:
+        - 7860:7860
