@@ -20,5 +20,5 @@ echo "Building for torch Version $torch";
 VER_TAG=torch_${torch}
 
 docker build --progress=plain --build-arg TORCH_VERSION=$torch -t dynamedia/ai-horde-dreamer:latest -t dynamedia/ai-horde-dreamer:$VER_TAG . 
-#docker push dynamedia/ai-horde-dreamer:$VER_TAG &&
-#docker push dynamedia/ai-horde-dreamer:latest
+docker push dynamedia/ai-horde-dreamer:$VER_TAG &&
+docker push dynamedia/ai-horde-dreamer:latest
