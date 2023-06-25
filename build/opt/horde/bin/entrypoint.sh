@@ -1,5 +1,7 @@
 #!/bin/bash
 
+WORKSPACE="/workspace"
+
 if [[ -z $GPU_COUNT ]]; then
     export GPU_COUNT=$(ls -l /proc/driver/nvidia/gpus/ | grep -c ^d)
 fi
@@ -16,7 +18,18 @@ fi
 # Terminal UI will not work in the default environment
 export BRIDGE_DISABLE_TERMINAL_UI=true
 
-# 
+# If we have directory '/workspace' move the worker and create a symlink
+
+if [[ -d "$WORKSPACE" ]]; then
+    if [[ ! -d "${WORKSPACE}/AI-Horde-Worker" ]]; then
+        mv /opt/AI-Horde-Worker $WORKSPACE
+    else
+        rm -rf /opt/AI-Horde-Worker
+    fi
+    ln -s "${WORKSPACE}/AI-Horde-Worker" /opt/AI-Horde-Worker
+fi
+
+# Update the worker
 /opt/horde/bin/update-hordelib.sh
 /opt/horde/bin/update-horde-worker.sh
 
