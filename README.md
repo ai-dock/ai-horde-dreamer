@@ -1,15 +1,20 @@
 # AI Horde Dreamer
+
 Run the [AI Horde](https://aihorde.net) Stable Diffusion [Worker](https://github.com/Haidra-Org/AI-Horde-Worker)  (dreamer) in docker either in the cloud or locally on your own computer.
 
-## Run locally
+The pre-built image is available on [Docker Hub](https://hub.docker.com/r/dynamedia/ai-horde-dreamer) or you can review the Dockerfile and self-build.
+
+
+## Run Locally
+
 You will need to have installed docker and the NVIDIA container toolkit so that your GPU(s) can be accesed from inside the container.A docker-compose.yaml file is included for your convenience. Simply edit the environment variables, save and then type `docker compose up`
 
-## Run in the cloud
+## Run in the Cloud
 The image is compatible with any GPU cloud platform. You simply need to pass environment variables at runtime. You can use any of the following provider templates for a quick start:
 - todo
 - todo
 
-## Environment variables
+## Environment Variables
 
 | Variable      | Description |
 | ----------- | ----------- |
@@ -27,7 +32,9 @@ Data inside docker containers is ephemeral - You'll lose all of it when the cont
 
 You may opt to mount a data volume at `/workspace`
 
-If you have mounted the workspace directory then the AI-Horde-Worker will be moved there. This is useful to avoid having to re-download all of your models.
+If you have mounted the workspace directory then the AI-Horde-Worker will be moved there from its default location in `/opt` and symlinked back into the running container. This is useful to avoid having to re-download all of your models or for making changes to your configuration without a container restart.
+
+The provided docker-compose.yaml will mount the local directory `./workspace` at `/workspace`.
 
 ## On Run
 
