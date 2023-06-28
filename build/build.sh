@@ -15,7 +15,7 @@ then
     torch=2.0.1
 fi
 
-echo "Building for torch Version $torch";
+printf "Building for torch Version $torch\n";
 
 VER_TAG=torch_${torch}
 

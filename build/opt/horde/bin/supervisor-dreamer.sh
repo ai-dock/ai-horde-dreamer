@@ -15,5 +15,6 @@ else
     worker_name="${BRIDGE_WORKER_NAME}#$((PROC_NUM+1))"
 fi
 
+printf "Starting dreamer $PROC_NUM ($worker_name)...\n"
 wait -n
-CUDA_VISIBLE_DEVICES=$PROC_NUM micromamba run -n horde python -u bridge_stable_diffusion.py -n "$worker_name"
+CUDA_VISIBLE_DEVICES=$PROC_NUM micromamba run -n dreamer python -u bridge_stable_diffusion.py -n "$worker_name"
