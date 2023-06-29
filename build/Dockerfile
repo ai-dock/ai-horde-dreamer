@@ -73,4 +73,4 @@ EXPOSE 7860
 
 ENTRYPOINT [ "/opt/horde/bin/entrypoint.sh" ]
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/opt/horde/bin/supervisord-env.sh"]

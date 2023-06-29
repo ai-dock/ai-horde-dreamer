@@ -3,6 +3,11 @@
 WORKSPACE="/workspace"
 DEFAULT_WORKER_NAME="Docker Dreamer"
 
+# Replace ___ with a space. Vast.ai fix
+while IFS='=' read -r -d '' n v; do
+    export ${n}="${v//___/' '}"
+done < <(env -0)
+
 printf "export PATH=\"$PATH\"\n" >> /root/.bashrc
 
 if [[ -z $GPU_COUNT ]]; then
@@ -15,9 +20,19 @@ if [[ -f "/root/.ssh/authorized_keys_mount" ]]; then
     cat /root/.ssh/authorized_keys_mount > /root/.ssh/authorized_keys
 fi
 
+# named to avoid conflict with the cloud providers below
 if [[ ! -z $SSH_PUBKEY ]]; then
     printf "$SSH_PUBKEY\n" >> /root/.ssh/authorized_keys
 fi
+
+# Alt names for $SSH_PUBKEY
+# vast.ai
+if [[ -z $SSH_PUBLIC_KEY ]]; then
+    printf "$SSH_PUBKEY\n" >> /root/.ssh/authorized_keys
+fi
+
+# Don't run tmux automatically on vast.ai
+touch /root/.no_auto_tmux`
 
 if [[ -z $HORDE_WORKER_BRANCH ]]; then
     printf "HORDE_WORKER_BRANCH=\"$HORDE_WORKER_BRANCH\"\n" >> /root/bashrc
