@@ -32,7 +32,7 @@ if [[ -z $SSH_PUBLIC_KEY ]]; then
 fi
 
 # Don't run tmux automatically on vast.ai
-touch /root/.no_auto_tmux`
+touch /root/.no_auto_tmux
 
 if [[ -z $HORDE_WORKER_BRANCH ]]; then
     printf "HORDE_WORKER_BRANCH=\"$HORDE_WORKER_BRANCH\"\n" >> /root/bashrc
