@@ -26,6 +26,8 @@ RUN apt-get update && \
         curl \
         wget \
         nano \
+        less \
+        screen \
         tmux \
         supervisor \
         openssh-server \

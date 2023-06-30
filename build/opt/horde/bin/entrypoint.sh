@@ -22,6 +22,11 @@ if [[ ! -z $SSH_PUBKEY ]]; then
 fi
 
 # Alt names for $SSH_PUBKEY
+# runpod.io
+if [[ ! -z $PUBLIC_KEY ]]; then
+    printf "$PUBLIC_KEY\n" >> /root/.ssh/authorized_keys
+fi
+
 # vast.ai
 if [[ ! -z $SSH_PUBLIC_KEY ]]; then
     printf "$SSH_PUBLIC_KEY\n" >> /root/.ssh/authorized_keys
