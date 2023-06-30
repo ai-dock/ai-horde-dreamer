@@ -16,7 +16,7 @@ You will need to have installed docker and the NVIDIA container toolkit so that 
 ## Run in the Cloud
 
 The image is compatible with any GPU cloud platform. You simply need to pass environment variables at runtime. You can use any of the following provider templates for a quick start:
-- [Vast.ai](https://cloud.vast.ai/?ref=62897&template_id=5fd950b74029009a0b63176e641ad9f1)
+- [Vast.ai](https://cloud.vast.ai/?ref=62897&template_id=c967379624d5b34217274ebf4a422d94)
 
 
 
