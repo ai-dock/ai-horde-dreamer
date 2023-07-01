@@ -17,6 +17,10 @@ for i in "$@"; do
     fi
 done
 
+# Need to re-write the config if started with this script
+
+micromamba run -n dreamer python /opt/horde/scripts/write-config.py
+
 # Killing supervisord will stop the container
 wait -n
 supervisord -c /etc/supervisor/supervisord.conf
