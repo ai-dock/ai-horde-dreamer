@@ -1,0 +1,18 @@
+{
+ "argv": [
+  "micromamba",
+  "run",
+  "-n",
+  "PYTHON_MAMBA_NAME",
+  "python",
+  "-m",
+  "ipykernel_launcher",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "DISPLAY_NAME",
+ "language": "python",
+ "metadata": {
+  "debugger": true
+ }
+}

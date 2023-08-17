@@ -36,4 +36,4 @@ ln -s /opt/horde/bin/worker-runtime.sh runtime.sh
 cp requirements.txt reqs-mod-dreamer.txt
 sed -i '/^torch.*[\W|=|>|<]*$/d' reqs-mod-dreamer.txt
 
-micromamba run -n dreamer pip --no-cache-dir install -r reqs-mod-dreamer.txt
+micromamba run -n horde pip --no-cache-dir install -r reqs-mod-dreamer.txt

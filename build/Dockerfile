@@ -1,78 +1,29 @@
-#!/bin/bash
+# For build automation - Allows building from any ai-dock base image
+# Use a *cuda*base* image as default because pytorch brings the libs
+ARG IMAGE_BASE="ghcr.io/ai-dock/pytorch:2.0.1-py3.10-cuda-11.8.0-base-22.04"
+FROM ${IMAGE_BASE}
 
-# Ensure Nvidia container toolkit
-FROM nvidia/cuda:11.8.0-base-ubuntu20.04
+LABEL org.opencontainers.image.source https://github.com/ai-dock/pytorch
 
-# Set ENV variables
-ENV LANG C.UTF-8
-ENV SHELL=/bin/bash
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH=$PATH:/opt/horde/bin:/opt/micromamba/bin
-ENV APT_INSTALL="apt-get install -y --no-install-recommends"
-ENV MAMBA_CREATE="micromamba --experimental create -y -c conda-forge"
-ENV PIP_INSTALL="pip --no-cache-dir install"
+LABEL org.opencontainers.image.description "Jupyter with Python kernels and pytorch pre-installed"
 
-# Force torch version to match in following mamba envs
-ARG TORCH_VERSION=2.0.1
+LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
-# Minimal base environment with micromamba and supervisor
-RUN apt-get update && \
-    $APT_INSTALL \
-        pkg-config \
-        libgl1 \
-        git \
-        zip \
-        unzip \
-        curl \
-        wget \
-        nano \
-        less \
-        screen \
-        tmux \
-        supervisor \
-        openssh-server \
-        uuid-runtime \
-        build-essential && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm /etc/update-motd.d/10-help-text && \
-    rm /etc/update-motd.d/60-unminimize && \
-    mkdir -p /root/.ssh && \
-    chmod 700 /root/.ssh && \
-    touch /root/.ssh/authorized_keys && \
-    chmod 600 /root/.ssh/authorized_keys && \
-    mkdir -p /run/sshd && \
-    chmod 700 /run/sshd && \
-    mkdir -p /var/log/supervisor && \
-    mkdir -p /opt/micromamba && \
-    cd /opt/micromamba && \
-    curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba && \
-    micromamba shell init --shell=bash --prefix=~/micromamba
-   
-# AI Horde Worker
-RUN cd /opt && \
-    git clone https://github.com/Haidra-Org/AI-Horde-Worker && \
-    $MAMBA_CREATE -n dreamer python=3.10 && \
-    micromamba run -n dreamer $PIP_INSTALL \
-        --extra-index https://download.pytorch.org/whl/cu118 \
-        torch==${TORCH_VERSION} \
-        torchvision \
-        torchaudio \
-        triton \
-        xformers \
-        nvidia-ml-py3 \
-        ruamel.yaml && \
-    micromamba run -n dreamer $PIP_INSTALL \
-        -r /opt/AI-Horde-Worker/requirements.txt && \
-    micromamba run -n dreamer python -m pip cache purge
+# Note: the default mamba environment is set by ai-dock/python
 
-ENV AIWORKER_CACHE_HOME=/tmp
+# Add new paths at front 
+#ENV PATH=/opt/another/bin:$PATH
 
-ADD ./opt /opt
-ADD ./etc /etc
+# Copy early so we can use scripts in the build - Changes to these files will invalidate the cache and cause a rebuild.
+COPY ./COPY_ROOT/ /
 
-EXPOSE 22
-EXPOSE 7860
+# Use build scripts to ensure we can build all targets from one Dockerfile in a single layer.
+# Don't put anything heavy in here - We can use multi-stage building above if necessary.
 
-ENTRYPOINT [ "/opt/horde/bin/entrypoint.sh" ]
+RUN bash -c /opt/ai-dock/bin/build/layer0/init.sh
 
-CMD ["/opt/horde/bin/supervisord-env.sh"]
+ENV PATH=/opt/horde/bin:$PATH
+ENV MAMBA_DEFAULT_ENV=horde
+
+# Keep init.sh as-is and place additional logic in /opt/ai-dock/bin/preflight.sh
+CMD ["init.sh"]

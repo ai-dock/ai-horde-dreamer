@@ -1,32 +1,80 @@
 version: "3.8"
+# Compose file build variables set in .env
 services:
-  horde-dreamer:
-    image: dynamedia/ai-horde-dreamer
-    volumes:
-        - ./workspace:/workspace
-        # Will echo to root-owned authorized_keys file;
-        # Avoids changing local file owner
-        - ./authorized_keys:/root/.ssh/authorized_keys_mount
-    environment:
-        # Limit GPU count. Default uses all NVIDIA cards found
-        #GPU_COUNT: 1
+  supervisor:
+    build:
+      context: ./build
+      args:
+        IMAGE_BASE: ${IMAGE_BASE}
+      tags:
+        - "ghcr.io/ai-dock/horde-dreamer:${IMAGE_TAG}"
         
+    image: ghcr.io/ai-dock/horde-dreamer:${IMAGE_TAG}
+    
+    security_opt:
+      # For Rclone mount
+      - apparmor:unconfined
+      # For AMD GPU
+      #- seccomp:unconfined
+    
+    cap_add:
+      # For Rclone mount
+      - SYS_ADMIN
+    
+    devices:
+      # For Rclone mount
+      - "/dev/fuse:/dev/fuse"
+      # For AMD GPU
+      #- "/dev/kfd:/dev/kfd"
+      #- "/dev/dri:/dev/dri"
+      
+    # For AMD GPU
+    #group_add:
+    #  - video
+    #  - render
+    
+    volumes:
+      # For Rclone mount
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ./config/rclone:/etc/rclone
+      # Workspace
+      - ./workspace:/workspace:rshared
+      # Will echo to root-owned authorized_keys file;
+      # Avoids changing local file owner
+      - ./config/authorized_keys:/root/.ssh/authorized_keys_mount
+    
+    ports:
+        # SSH available on host machine port 2222 to avoid conflict. Change to suit
+        - ${SSH_PORT_HOST}:${SSH_PORT}
+        # Rclone webserver for interactive configuration
+        - ${RCLONE_PORT_HOST}:53682
+        # AI Horde web UI
+        - ${HORDE_WEBUI_HOST}:7860
+   
+    environment:
+        # Don't enclose values in quotes
         # AI-Horde-Worker branch or commit hash
-        HORDE_WORKER_BRANCH: "main"
+        - HORDE_WORKER_BRANCH=main
         
         # Web UI auth credentials - Change the values.
-        WEB_USER: "admin"
-        WEB_PASSWORD: "password"
+        - WEB_USER=admin
+        - WEB_PASSWORD=password
         
         # Set bridgeData.yaml variables
         # prefix any bridgeData.yaml key with BRIDGE_...
-        BRIDGE_API_KEY: "0000000000"
-        BRIDGE_WORKER_NAME: "Docker Dreamer"
-        BRIDGE_MAX_THREADS: 1
-        BRIDGE_MAX_POWER: 8
-        BRIDGE_MODELS_TO_LOAD: "Top 2, stable_diffusion_inpainting"
-    ports:
-        # SSH available on host machine port 2222 to avoid conflict. Change to suit
-        - 2222:22
-        # Web UI
-        - 7860:7860
+        - BRIDGE_API_KEY=0000000000
+        - BRIDGE_WORKER_NAME=Docker Dreamer
+        - BRIDGE_MAX_THREADS=1
+        - BRIDGE_MAX_POWER=8
+        - BRIDGE_MODELS_TO_LOAD=Top 2, stable_diffusion_inpainting
+        
+        ### Base Variables ###
+        # Allows running true SSH alongside provider proxy SSH
+        - SSH_PORT=${SSH_PORT}
+        - WORKSPACE=/workspace/
+        - CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
+        - CF_QUICK_TUNNELS=true
+        #- PROVISIONING_SCRIPT=https://raw.githubusercontent.com/ai-dock/base-image/main/demo/provisioning.sh
+    
+    env_file: config/env.conf

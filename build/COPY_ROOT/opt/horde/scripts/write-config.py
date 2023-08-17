@@ -2,12 +2,21 @@ import os
 from ruamel.yaml import YAML
 
 BRIDGEDATA_PREFIX = "BRIDGE_"
-BRIDGEDATA_TEMPLATE_PATH = "/opt/AI-Horde-Worker/bridgeData_template.yaml"
+BRIDGEDATA_TEMPLATE_PATH = None
 BRIDGEDATA_PATH = '/opt/AI-Horde-Worker/bridgeData.yaml'
 
 bridge_vars = None
 bridge_data_template = None
 bridge_data = None
+
+# If there is already a config we shoudld not reset it
+def set_bridgedata_template_path():
+    global BRIDGEDATA_TEMPLATE_PATH
+    
+    if os.path.exists(BRIDGEDATA_PATH):
+        BRIDGEDATA_TEMPLATE_PATH = BRIDGEDATA_PATH
+    else:
+        BRIDGEDATA_TEMPLATE_PATH = "/opt/AI-Horde-Worker/bridgeData_template.yaml"
 
 def set_bridge_vars():
     global bridge_vars
@@ -82,6 +91,7 @@ def write_bridge_data():
         yaml.indent(mapping=2, sequence=4, offset=2)
         yaml.dump(bridge_data, file)
 
+set_bridgedata_template_path()
 set_bridge_vars()
 set_bridge_data_template()
 set_bridge_data()

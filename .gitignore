@@ -1,2 +1,3 @@
 workspace
-authorized_keys
+config/
+.env
