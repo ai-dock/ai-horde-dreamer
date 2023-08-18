@@ -1,17 +1,19 @@
-[![Docker Build](https://github.com/ai-dock/jupyter-pytorch/actions/workflows/docker-build.yml/badge.svg)](https://github.com/ai-dock/jupyter-pytorch/actions/workflows/docker-build.yml)
+[![Docker Build](https://github.com/ai-dock/ai-horde-dreamer/actions/workflows/docker-build.yml/badge.svg)](https://github.com/ai-dock/ai-horde-dreamer/actions/workflows/docker-build.yml)
 
-# Jupyter PyTorch
+# AI Horde Dreamer
 
-Run Jupyter lab or notebook with Python, iPython and PyTorch included.
+Run the [AI Horde](https://aihorde.net) Stable Diffusion [Worker](https://github.com/Haidra-Org/AI-Horde-Worker)  (dreamer) in docker either in the cloud or locally on your own computer.
 
-## About PyTorch
+The pre-built image is available on [Docker Hub](https://hub.docker.com/r/dynamedia/ai-horde-dreamer) or you can review the Dockerfile and self-build.
 
-PyTorch is an open-source deep learning framework developed by Facebook's AI Research lab (FAIR). It provides a flexible and dynamic computational graph, allowing developers to build and train neural networks. Unlike some other frameworks, PyTorch enables defining and modifying network architectures on-the-fly, making experimentation and debugging easier.
+This image contains a snapshot of the worker, Hordelib and all of the required dependencies current at the time the image is built.
 
-One of PyTorch's essential features is automatic differentiation, which is crucial for training neural networks using gradient-based optimization algorithms like backpropagation. Additionally, PyTorch supports GPU acceleration, enabling faster computation during model training.
+AI Horde releases updates frequently so the container will always update to the newest versions available on start. This should normally be very fast.
 
-The framework has gained popularity among researchers and developers due to its ease of use and extensive community support. With a large and active community, users can find abundant resources, tutorials, and libraries to support their deep learning projects.
 
+## About AI Horde
+
+The AI Horde is a crowdsourced cluster of image and text generation workers. Running a worker node earns kudos which can be used to prioritise your own image generations. Their website is https://aihorde.net/ 
 
 ## Pre-built Images
 
@@ -28,25 +30,15 @@ Tags follow these patterns:
 
 - `:latest-cuda` -> `:2.0.1-py3.10-cuda-11.8.0-base-22.04`
 
-##### _ROCm_
-- `:[pytorch-version]-py[python-version]-rocm-[x.x.x]-runtime-[ubuntu-version]`
-
-- `:latest-rocm` -> `:2.0.1-py3.10-rocm-5.4.2-runtime-22.04`
-
-##### _CPU_
-- `:[pytorch-version]-py[python-version]-ubuntu-[ubuntu-version]`
-
-- `:latest-cpu` -> `:2.0.1-py3.10-cpu-22.04` 
-
-Browse [here](https://github.com/ai-dock/jupyter-pytorch/pkgs/container/jupyter-pytorch) for an image suitable for your target environment.
+Browse [here](https://github.com/ai-dock/ai-horde-dreamer/pkgs/container/ai-horde-dreamer) for an image suitable for your target environment.
 
 You can also self-build from source by editing `.env` and running `docker compose build`.
 
-Supported Python versions: `3.11`, `3.10`, `3.9`, `3.8`
+Supported Python versions: `3.10`
 
-Supported Pytorch versions: `2.0.1`, `1.13.1` 
+Supported Pytorch versions: `2.0.1`
 
-Supported Platforms: `NVIDIA CUDA`, `AMD ROCm`, `CPU`
+Supported Platforms: `NVIDIA CUDA`
 
 ## Run Locally
 
@@ -65,7 +57,7 @@ __Container Cloud__
 
 Container providers don't give you access to the docker host but are quick and easy to set up. They are often inexpensive when compared to a full VM or bare metal solution.
 
-All images built for ai-dock are tested for compatibility with both [vast.ai](https://link.ai-dock.org/template-vast-jupyter-pytorch) and [runpod.io](https://link.ai-dock.org/template-runpod-jupyter-pytorch).
+All images built for ai-dock are tested for compatibility with both [vast.ai](https://link.ai-dock.org/template-vast-ai-horde-dreamer) and [runpod.io](https://link.ai-dock.org/template-runpod-ai-horde-dreamer).
 
 Images that include Jupyter are also tested to ensure compatibility with [Paperspace Gradient](https://link.ai-dock.org/console.paperspace.com)
 
@@ -203,7 +195,7 @@ All processes are managed by [supervisord](https://supervisord.readthedocs.io/en
 >[!NOTE]  
 >*Some of the included services would not normally be found **inside** of a container. They are, however, necessary here as some cloud providers give no access to the host; Containers are deployed as if they were a virtual machine.*
 
-### Jupyter
+### Jupyter (with tag `jupyter` only)
 
 The jupyter server will launch a `lab` instance unless you specify `JUPYTER_MODE=notebook`.
 
@@ -295,6 +287,7 @@ Some ports need to be exposed for the services to run or for certain features of
 | Open Port             | Service / Description |
 | --------------------- | --------------------- |
 | `22`                  | SSH server            |
+| `7860`                | AI Horde WebUI        |
 | `8888`                | Jupyter server |
 | `53682`               | Rclone interactive config |
 
@@ -302,13 +295,13 @@ Some ports need to be exposed for the services to run or for certain features of
 
 **Vast.​ai**
 
-[jupyter-pytorch:latest](https://link.ai-dock.org/template-vast-jupyter-pytorch)
+[ai-horde-dreamer:latest](https://link.ai-dock.org/template-vast-ai-horde-dreamer)
 
 ---
 
 **Runpod.​io**
 
-[jupyter-pytorch:latest](https://link.ai-dock.org/template-runpod-jupyter-pytorch)
+[ai-horde-dreamer:LATEST](https://link.ai-dock.org/template-runpod-jupyter-ai-horde-dreamer)
 
 ---
 
