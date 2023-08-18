@@ -4,12 +4,9 @@
 
 Run the [AI Horde](https://aihorde.net) Stable Diffusion [Worker](https://github.com/Haidra-Org/AI-Horde-Worker)  (dreamer) in docker either in the cloud or locally on your own computer.
 
-The pre-built image is available on [Docker Hub](https://hub.docker.com/r/dynamedia/ai-horde-dreamer) or you can review the Dockerfile and self-build.
-
 This image contains a snapshot of the worker, Hordelib and all of the required dependencies current at the time the image is built.
 
 AI Horde releases updates frequently so the container will always update to the newest versions available on start. This should normally be very fast.
-
 
 ## About AI Horde
 
@@ -101,9 +98,13 @@ You can use the included `cloudflared` service to make secure connections withou
 
 | Variable              | Description |
 | --------------------- | ----------- |
+| `BRIDGE_API_KEY`      | Your AI Horde API key |
+| `BRIDGE_WORKER_NAME`  | Your worker name |
+| `BRIDGE_*`            | * Represents any bridgeData.yaml variable. Must be uppercase |
 | `CF_TUNNEL_TOKEN`     | Cloudflare zero trust tunnel token - See [documentation](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/). |
 | `CF_QUICK_TUNNELS`    | Create ephemeral Cloudflare tunnels for web services (default `false`) |
 | `GPU_COUNT`           | Limit the number of available GPUs |
+| `HORDE_WORKER_BRANCH` | AI-Horde-Worker branch/commit hash. Defaults to `main` |
 | `JUPYTER_MODE`        | `lab` (default), `notebook` |
 | `JUPYTER_PORT`        | Set an alternative port (default `8888`) |
 | `JUPYTER_TOKEN`       | Manually set your password |
@@ -112,6 +113,8 @@ You can use the included `cloudflared` service to make secure connections withou
 | `SKIP_ACL`            | Set `true` to skip modifying workspace ACL |
 | `SSH_PORT`            | Set a non-standard port for SSH (default `22`) |
 | `SSH_PUBKEY`          | Your public key for SSH |
+| `WEB_USER`            | Username for the web UI |
+| `WEB_PASSWORD`        | Password for the web UI |
 | `WORKSPACE`           | A volume path. Defaults to `/workspace/` |
 
 Environment variables can be specified by using any of the standard methods (`docker-compose.yaml`, `docker run -e...`). Additionally, environment variables can also be passed as parameters of `init.sh`.
@@ -147,6 +150,7 @@ Micromamba environments are particularly useful where several software packages 
 | Environment    | Packages |
 | -------------- | ----------------------------------------- |
 | `base`         | micromamba's base environment |
+| `horde`        | AI Horde and dependencies |
 | `system`       | `supervisord`, `openssh`, `rclone` |
 | `jupyter`      | `jupyter` |
 | `python_[ver]` | `python` |
@@ -194,6 +198,16 @@ All processes are managed by [supervisord](https://supervisord.readthedocs.io/en
 
 >[!NOTE]  
 >*Some of the included services would not normally be found **inside** of a container. They are, however, necessary here as some cloud providers give no access to the host; Containers are deployed as if they were a virtual machine.*
+
+### Dreamer
+
+A dreamer (stable diffusion worker) will be created for every NVIDIA GPU found in your system unless you have set a limit with the variable `GPU_LIMIT`
+
+The first worker (GPU 0) will be named according to your specification in `BRIDGE_WORKER_NAME`. Extra workers will have this name appended with '#2, #3...'
+
+### Web UI
+
+If you have specified the environment variables `WEB_USER` and `WEB_PASSWORD` the web UI will be launched in the container on port 7860.
 
 ### Jupyter (with tag `jupyter` only)
 

@@ -9,12 +9,14 @@ if [[ -z $BRIDGE_WORKER_NAME || "$BRIDGE_WORKER_NAME" = $DEFAULT_WORKER_NAME ]];
     export BRIDGE_WORKER_NAME="$DEFAULT_WORKER_NAME $(uuidgen -r)"
 fi
 
-if [[ ! -z $BRIDGE_DREAMER_NAME ]]; then
+if [[ -n $BRIDGE_DREAMER_NAME ]]; then
     export BRIDGE_WORKER_NAME="${BRIDGE_DREAMER_NAME}"
 fi
 
 # Terminal UI will not work in the default environment
-export BRIDGE_DISABLE_TERMINAL_UI=true
+if [[ -z $BRIDGE_DISABLE_TERMINAL_UI ]]; then
+    export BRIDGE_DISABLE_TERMINAL_UI=true
+fi
 
 if [[ -z $PROC_NUM ]]; then
     PROC_NUM=0
