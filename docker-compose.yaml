@@ -67,7 +67,7 @@ services:
         - BRIDGE_WORKER_NAME=Docker Dreamer
         - BRIDGE_MAX_THREADS=1
         - BRIDGE_MAX_POWER=8
-        - BRIDGE_MODELS_TO_LOAD=Top 2, stable_diffusion_inpainting
+        - BRIDGE_MODELS_TO_LOAD=Top 2
         
         ### Base Variables ###
         # Allows running true SSH alongside provider proxy SSH

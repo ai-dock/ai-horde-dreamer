@@ -4,20 +4,6 @@ trap 'kill $(jobs -p)' EXIT
 
 cd /opt/AI-Horde-Worker
 
-# Ensure worker_name for bridge_stable_diffusion.py -n
-if [[ -z $BRIDGE_WORKER_NAME || "$BRIDGE_WORKER_NAME" = $DEFAULT_WORKER_NAME ]]; then
-    export BRIDGE_WORKER_NAME="$DEFAULT_WORKER_NAME $(uuidgen -r)"
-fi
-
-if [[ -n $BRIDGE_DREAMER_NAME ]]; then
-    export BRIDGE_WORKER_NAME="${BRIDGE_DREAMER_NAME}"
-fi
-
-# Terminal UI will not work in the default environment
-if [[ -z $BRIDGE_DISABLE_TERMINAL_UI ]]; then
-    export BRIDGE_DISABLE_TERMINAL_UI=true
-fi
-
 if [[ -z $PROC_NUM ]]; then
     PROC_NUM=0
 fi

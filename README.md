@@ -23,9 +23,11 @@ The `:latest` tag points to `:latest-cuda`
 Tags follow these patterns:
 
 ##### _CUDA_
-- `:[pytorch-version]-py[python-version]-cuda-[x.x.x]-base-[ubuntu-version]`
+- `:{jupyter}-pytorch-[pytorch-version]-py[python-version]-cuda-[x.x.x]-base-[ubuntu-version]`
 
-- `:latest-cuda` -> `:2.0.1-py3.10-cuda-11.8.0-base-22.04`
+- `:latest-cuda` -> `:pytorch-2.0.1-py3.10-cuda-11.8.0-base-22.04`
+
+- `:latest-cuda-jupyter` -> `:jupyter-pytorch-2.0.1-py3.10-cuda-11.8.0-base-22.04`
 
 Browse [here](https://github.com/ai-dock/ai-horde-dreamer/pkgs/container/ai-horde-dreamer) for an image suitable for your target environment.
 
@@ -205,6 +207,8 @@ A dreamer (stable diffusion worker) will be created for every NVIDIA GPU found i
 
 The first worker (GPU 0) will be named according to your specification in `BRIDGE_WORKER_NAME`. Extra workers will have this name appended with '#2, #3...'
 
+The terminal UI is disabled. If you would like to use it you'll need to SSH (or docker exec) into your container and stop the dreamer service with `supervisorctl`. You can then edit your `bridgeData.yaml` and start the worker manually.
+
 ### Web UI
 
 If you have specified the environment variables `WEB_USER` and `WEB_PASSWORD` the web UI will be launched in the container on port 7860.
@@ -310,22 +314,27 @@ Some ports need to be exposed for the services to run or for certain features of
 **Vast.​ai**
 
 [ai-horde-dreamer:latest](https://link.ai-dock.org/template-vast-ai-horde-dreamer)
-
+[ai-horde-dreamer:latest-jupyter](https://link.ai-dock.org/template-vast-ai-horde-dreamer-jupyter)
 ---
 
 **Runpod.​io**
 
-[ai-horde-dreamer:LATEST](https://link.ai-dock.org/template-runpod-jupyter-ai-horde-dreamer)
-
+[ai-horde-dreamer:latest](https://link.ai-dock.org/template-runpod-ai-horde-dreamer)
+[ai-horde-dreamer:latest-jupyter](https://link.ai-dock.org/template-runpod-ai-horde-dreamer-jupyter)
 ---
 
 **Paperspace**
 
 - Create a [new notebook](https://link.ai-dock.org/console.paperspace.com) with the `Start from Scratch` template.
 - Select `Advanced options`
-- In Container Name enter `ghcr.io/ai-dock/jupyter-pytorch:latest`
+- In Container Name enter `ghcr.io/ai-dock/ai-horde-dreamer:latest-jupyter`
 - In Registry Username enter `x` (Paperspace bug)
-- In Command enter `init.sh WORKSPACE=/notebooks`
+- In Command enter `init.sh WORKSPACE=/notebooks BRIDGE_API_KEY="**your-api-key**" BRIDGE_WORKER_NAME="**your worker name**" WEB_USER="admin" WEB_PASSWORD="**your-password**" CF_QUICK_TUNNELS=true`
+
+You can use the web UI to do further configuration, or you can supply further environment variables as detailed above.
+
+>[!NOTE]  
+>The use of `CF_QUICK_TUNNELS` enables us to reach the web UI with a link supplied by Cloudflare. You can find the link in `/var/log/supervisor/quicktunnel-horde-webui.log`
 
 >[!WARNING]  
 >Do not attempt to use tunnels to circumvent Paperspace restrictions (eg. SSH & private networking) - You will lose your account.
@@ -333,7 +342,7 @@ Some ports need to be exposed for the services to run or for certain features of
 ---
 
 >[!NOTE]  
->These templates are configured to use the `latest` tag but you are free to change to any of the available CUDA tags listed [here](https://github.com/ai-dock/jupyter-pytorch/pkgs/container/jupyter-pytorch)
+>These templates are configured to use the `latest` tag but you are free to change to any of the available CUDA tags listed [here](https://github.com/ai-dock/ai-horde-dreamer/pkgs/container/ai-horde-dreamer)
 
 ## Compatible VM Providers
 
