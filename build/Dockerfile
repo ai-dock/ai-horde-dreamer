@@ -20,6 +20,7 @@ COPY ./COPY_ROOT/ /
 # Use build scripts to ensure we can build all targets from one Dockerfile in a single layer.
 # Don't put anything heavy in here - We can use multi-stage building above if necessary.
 
+ARG IMAGE_BASE
 RUN bash -c /opt/ai-dock/bin/build/layer0/init.sh
 
 ENV PATH=/opt/horde/bin:$PATH

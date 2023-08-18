@@ -50,7 +50,7 @@ services:
         # Rclone webserver for interactive configuration
         - ${RCLONE_PORT_HOST}:53682
         # AI Horde web UI
-        - ${HORDE_WEBUI_HOST}:7860
+        - ${HORDE_WEBUI_PORT_HOST}:7860
    
     environment:
         # Don't enclose values in quotes
