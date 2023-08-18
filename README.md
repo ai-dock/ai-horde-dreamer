@@ -207,7 +207,7 @@ A dreamer (stable diffusion worker) will be created for every NVIDIA GPU found i
 
 The first worker (GPU 0) will be named according to your specification in `BRIDGE_WORKER_NAME`. Extra workers will have this name appended with '#2, #3...'
 
-The terminal UI is disabled. If you would like to use it you'll need to SSH (or docker exec) into your container and stop the dreamer service with `supervisorctl`. You can then edit your `bridgeData.yaml` and start the worker manually.
+The terminal UI is disabled. If you would like to use it you'll need to SSH (or docker exec) into your container and stop the dreamer service(s) with `supervisorctl`. You can then edit your `bridgeData.yaml` and start the worker manually.
 
 ### Web UI
 

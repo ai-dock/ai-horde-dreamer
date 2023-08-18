@@ -1,3 +1,3 @@
 #!/bin/bash
 
-micromamba run -n dreamer "$@"
+micromamba run -n horde "$@"
