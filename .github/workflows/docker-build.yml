@@ -21,7 +21,6 @@ jobs:
           - "jupyter-pytorch"
         python:
           - "3.10"
-          - "3.11"
         pytorch:
           - "2.0.1"
         cuda:
