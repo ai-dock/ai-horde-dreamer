@@ -2,6 +2,7 @@
 
 function main() {
     move_to_workspace
+    copy_notebook
     update_horde
     set_safe_envs
     write_config
@@ -14,6 +15,14 @@ function move_to_workspace() {
         fi
             rm -rf /opt/AI-Horde-Worker
             ln -s "${WORKSPACE}/AI-Horde-Worker" /opt/AI-Horde-Worker
+    fi
+}
+
+function copy_notebook() {
+    if micromamba env list | grep 'jupyter' > /dev/null 2>&1;  then
+        if [[ ! -f "${WORKSPACE}/dreamer.ipynb" ]]; then
+            cp /usr/local/share/ai-dock/dreamer.ipynb ${WORKSPACE}
+        fi
     fi
 }
 

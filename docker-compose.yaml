@@ -7,7 +7,7 @@ services:
       args:
         IMAGE_BASE: ${IMAGE_BASE}
       tags:
-        - "ghcr.io/ai-dock/horde-dreamer:${IMAGE_TAG}"
+        - "ghcr.io/ai-dock/ai-horde-dreamer:${IMAGE_TAG}"
         
     image: ghcr.io/ai-dock/ai-horde-dreamer:${IMAGE_TAG}
     
@@ -42,6 +42,8 @@ services:
         - ${RCLONE_PORT_HOST}:53682
         # AI Horde web UI
         - ${HORDE_WEBUI_PORT_HOST}:7860
+        # Jupyter
+        - ${JUPYTER_PORT_HOST}:${JUPYTER_PORT}
    
     environment:
         # AI-Horde-Worker branch or commit hash
@@ -63,6 +65,9 @@ services:
         # Allows running true SSH alongside provider proxy SSH
         - SSH_PORT=${SSH_PORT}
         - WORKSPACE=${WORKSPACE}
+        - JUPYTER_PORT=${JUPYTER_PORT}
+        - JUPYTER_TOKEN=${JUPYTER_TOKEN}
+        - JUPYTER_MODE=${JUPYTER_MODE}
         - CF_TUNNEL_TOKEN=${CF_TUNNEL_TOKEN}
         - CF_QUICK_TUNNELS=${CF_QUICK_TUNNELS}
         #- PROVISIONING_SCRIPT=https://raw.githubusercontent.com/ai-dock/base-image/main/demo/provisioning.sh
