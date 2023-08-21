@@ -114,6 +114,8 @@ You can use the included `cloudflared` service to make secure connections withou
 | `CF_TUNNEL_TOKEN`     | Cloudflare zero trust tunnel token - See [documentation](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/). |
 | `CF_QUICK_TUNNELS`    | Create ephemeral Cloudflare tunnels for web services (default `false`) |
 | `GPU_COUNT`           | Limit the number of available GPUs |
+| `HORDE_DEV`           | Set `true` to install development dependencies. Defaults to `false` |
+| `HORDE_SKIP_SERVICE`  | Set `true` to prevent the worker launching on container start. Defaults to `false` |
 | `HORDE_WORKER_BRANCH` | AI-Horde-Worker branch/commit hash. Defaults to `main` |
 | `JUPYTER_MODE`        | `lab` (default), `notebook` |
 | `JUPYTER_PORT`        | Set an alternative port (default `8888`) |
@@ -139,7 +141,7 @@ It can be useful to perform certain actions when starting a container, such as c
 
 You can use the environment variable `PROVISIONING_SCRIPT` to specify the URL of a script you'd like to run.
 
-If you are running locally you may instead opt to mount an executable script at `/opt/ai-dock/bin/provisioning.sh`.
+If you are running locally you may instead opt to mount a script at `/opt/ai-dock/bin/provisioning.sh`.
 
 >[!NOTE]  
 >`supervisord` will not spawn any processes until the provisioning script has completed.
@@ -217,7 +219,7 @@ A dreamer (stable diffusion worker) will be created for every NVIDIA GPU found i
 
 The first worker (GPU 0) will be named according to your specification in `BRIDGE_WORKER_NAME`. Extra workers will have this name appended with '#2, #3...'
 
-The terminal UI is disabled. If you would like to use it you'll need to SSH (or docker exec) into your container and stop the dreamer service(s) with `supervisorctl`. You can then edit your `bridgeData.yaml` and start the worker manually.
+The terminal UI is disabled when running as a service. If you'd like to use it you should set `HORDE_SKIP_SERVICE=true` and access the container by SSH (or docker exec) and launch the worker manually.
 
 ### Web UI
 

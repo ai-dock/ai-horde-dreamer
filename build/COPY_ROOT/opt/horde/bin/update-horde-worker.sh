@@ -22,18 +22,35 @@ git checkout ${branch}
 git pull
 
 # Use default gradio css
-rm webui.css
+if [[ -f webui.css ]]; then
+    git update-index --assume-unchanged webui.css
+    rm webui.css
+fi
+# Ensure the horde shell scripts work without alteration
+if [[ -f update-runtime.sh ]]; then
+    git update-index --assume-unchanged update-runtime.sh
+    rm update-runtime.sh
+fi
 
-# Overide shell scripts in case of interactive use. Defaults will break things - See docs
-rm update-runtime.sh
-rm horde-bridge.sh
-rm runtime.sh
-ln -s /opt/horde/bin/worker-update-runtime.sh update-runtime.sh
-ln -s /opt/horde/bin/worker-horde-bridge.sh horde-bridge.sh
-ln -s /opt/horde/bin/worker-runtime.sh runtime.sh
+rm -rf /opt/AI-Horde-Worker/conda > /dev/null 2>&1
+rm -rf /opt/AI-Horde-Worker/bin > /dev/null 2>&1
+cp -rf /opt/horde/override/bin .
+cp -rf /opt/horde/override/conda .
 
 # We pre-installed pytorch and want a universal version across all micromamba environments (if more than one)
-cp requirements.txt reqs-mod-dreamer.txt
-sed -i '/^torch.*[\W|=|>|<]*$/d' reqs-mod-dreamer.txt
 
-micromamba run -n horde pip --no-cache-dir install -r reqs-mod-dreamer.txt
+cp requirements.txt reqs-ai-horde-dreamer.txt
+sed -i '/^--extra-index-url.*[\W|=|>|<]*$/d' reqs-ai-horde-dreamer.txt
+sed -i '/^torch.*[\W|=|>|<]*$/d' reqs-ai-horde-dreamer.txt
+sed -i '/^xformers.*[\W|=|>|<]*$/d' reqs-ai-horde-dreamer.txt
+micromamba run -n horde pip --no-cache-dir install -r reqs-ai-horde-dreamer.txt
+
+if [[ -n $HORDE_DEV && $HORDE_DEV != "false" ]]; then
+    cp requirements.dev.txt reqs-ai-horde-dreamer-dev.txt
+    sed -i '/^--extra-index-url.*[\W|=|>|<]*$/d' reqs-ai-horde-dreamer-dev.txt
+    sed -i '/^torch.*[\W|=|>|<]*$/d' reqs-ai-horde-dreamer-dev.txt
+    sed -i '/^xformers.*[\W|=|>|<]*$/d' reqs-ai-horde-dreamer-dev.txt
+    micromamba run -n horde pip --no-cache-dir install -r reqs-ai-horde-dreamer-dev.txt
+fi
+
+rm reqs-ai-horde-dreamer*.txt

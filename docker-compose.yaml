@@ -48,6 +48,9 @@ services:
     environment:
         # AI-Horde-Worker branch or commit hash
         - HORDE_WORKER_BRANCH=${HORDE_WORKER_BRANCH}
+        - HORDE_DEV=${HORDE_DEV}
+        - HORDE_SKIP_SERVICE=${HORDE_SKIP_SERVICE}
+        - GPU_COUNT=${GPU_COUNT}
         
         # Web UI auth credentials - Change the values.
         - WEB_USER=${WEB_USER}

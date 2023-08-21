@@ -8,6 +8,15 @@ if [[ -z $PROC_NUM ]]; then
     PROC_NUM=0
 fi
 
+if [[ -z $PROC_NAME ]]; then
+    PROC_NAME="dreamer"
+fi
+
+if [[ -n $HORDE_SKIP_SERVICE && $HORDE_SKIP_SERVICE != "false" ]]; then
+    printf "Skipping startup for %s %s\n" "${PROC_NAME}" ${PROC_NUM}
+    exit 0
+fi
+
 if [[ $PROC_NUM -eq 0 ]]; then
     worker_name="$BRIDGE_WORKER_NAME"
 else

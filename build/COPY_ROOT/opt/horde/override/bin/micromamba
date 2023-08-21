@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ $8 = "hordelib.benchmark" ]]; then
+    micromamba run -n horde python -m hordelib.benchmark
+elif [[ $8 = *".py" ]]; then
+    micromamba run -n horde python -s "${@:8}"
+else
+    printf "The docker override does not understand your use case - Please raise an issue at https://github.com/ai-dock/ai-horde-dreamer\n"
+fi
