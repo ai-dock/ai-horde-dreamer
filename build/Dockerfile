@@ -9,6 +9,7 @@ LABEL org.opencontainers.image.description "AI Horde image generation worker"
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
+ENV IMAGE_SLUG="ai-horde-dreamer"
 ENV PATH=/opt/horde/bin:$PATH
 
 # Copy early so we can use scripts in the build - Changes to these files will invalidate the cache and cause a rebuild.

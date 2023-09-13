@@ -38,6 +38,10 @@ services:
     ports:
         # SSH available on host machine port 2222 to avoid conflict. Change to suit
         - ${SSH_PORT_HOST}:${SSH_PORT}
+        # redirect to Cloudflare quick tunnel
+        - ${REDIRECTOR_PORT_HOST}:1111
+        # Websocket log viewer
+        - ${LOG_VIEWER_PORT_HOST}:1122
         # Rclone webserver for interactive configuration
         - ${RCLONE_PORT_HOST}:53682
         # AI Horde web UI

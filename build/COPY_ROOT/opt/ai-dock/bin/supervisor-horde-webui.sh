@@ -1,6 +1,15 @@
 #!/bin/bash
 
-trap 'kill $(jobs -p)' EXIT
+trap cleanup EXIT
+
+PORT=7860
+METRICS_PORT=1860
+SERVICE_NAME="AI Horde Web UI"
+
+function cleanup() {
+    kill $(jobs -p) > /dev/null 2>&1
+    rm /run/http_ports/$PORT > /dev/null 2>&1
+}
 
 if [[ -z "$WEB_USER" ]] || [[ -z "$WEB_PASSWORD" ]]; then
     printf "Skipping launch because WEB_USER or WEB_PASSWORD not defined\n" 1>&2
@@ -8,11 +17,10 @@ if [[ -z "$WEB_USER" ]] || [[ -z "$WEB_PASSWORD" ]]; then
     exit 0
 fi
 
+printf "{\"port\": \"$PORT\", \"metrics_port\": \"$METRICS_PORT\", \"service_name\": \"$SERVICE_NAME\"}" > /run/http_ports/$PORT
+
 cd /opt/AI-Horde-Worker
 
 printf "Starting Web UI...\n"
-if [[ $CF_QUICK_TUNNELS = "true" ]]; then
-    cloudflared tunnel --url localhost:7860 > /var/log/supervisor/quicktunnel-horde-webui.log 2>&1 &
-fi
 
 micromamba run -n horde python -u webui.py --lan --user $WEB_USER --password $WEB_PASSWORD

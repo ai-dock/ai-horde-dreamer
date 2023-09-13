@@ -164,6 +164,7 @@ Micromamba environments are particularly useful where several software packages 
 | `base`         | micromamba's base environment |
 | `horde`        | AI Horde and dependencies |
 | `system`       | `supervisord`, `openssh`, `rclone` |
+| `fastapi`      | `logtail web UI`, `port redirector web UI` |
 | `jupyter`      | `jupyter` |
 | `python_[ver]` | `python` |
 
@@ -240,6 +241,25 @@ Jupyter's official documentation is available at https://jupyter.org/
 
 >[!NOTE]  
 >_If you have enabled `CF_QUICK_TUNNELS` a secure `https://[randomly-auto-generated-sub-domain].trycloudflare.com` link will be created. You can find it at `/var/log/supervisor/quicktunnel-jupyter.log`_
+
+### Port Redirector
+
+This is a simple list of links to the web services available inside the container.
+
+The service will bind to port `1111`.
+
+For each service, you will find a direct link and, if you have set `CF_QUICK_TUNNELS=true`, a link to the service via a fast and secure Cloudflare tunnel.
+
+>[!NOTE]  
+>*This service will not show links to any pre-configured Cloudflare tunnels as the domains are static and already known to the user.*
+
+### Log Viewer
+
+The web based log viewer will start on port `1122`.
+
+It's a very lightweight websocket based stream of the latest updates in `/var/log/logtail.log`.
+
+This service will also be accessible on any other exposed ports until the program designated to that port is ready to use.
 
 ### Cloudflared
 
@@ -320,11 +340,13 @@ If you are logged into the container you can follow the logs by running `logtail
 Some ports need to be exposed for the services to run or for certain features of the provided software to function
 
 
-| Open Port             | Service / Description |
-| --------------------- | --------------------- |
-| `22`                  | SSH server            |
-| `7860`                | AI Horde WebUI        |
-| `8888`                | Jupyter server |
+| Open Port             | Service / Description     |
+| --------------------- | ------------------------- |
+| `22`                  | SSH server                |
+| `1111`                | Port redirector web UI    |
+| `1122`                | Log viewer web UI         |
+| `7860`                | AI Horde WebUI            |
+| `8888`                | Jupyter server            |
 | `53682`               | Rclone interactive config |
 
 ## Pre-Configured Templates
